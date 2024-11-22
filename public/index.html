@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LINE風チャット</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="loginScreen">
+    <h2>チャットログイン</h2>
+    <input type="text" id="username" placeholder="ユーザ名を入力" />
+    <input type="password" id="password" placeholder="4桁のパスワード" maxlength="4" />
+    <button id="loginButton">ログイン</button>
+  </div>
+
+  <div id="chatScreen" style="display: none;">
+    <div id="chatWindow">
+      <div id="chatMessages"></div>
+      <input type="text" id="messageInput" placeholder="メッセージを入力..." />
+      <button id="sendButton">送信</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
