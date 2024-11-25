@@ -1,32 +1,39 @@
+// 必要なモジュールをインポート
 const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
 
+// アプリケーションとサーバーの設定
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
 
-// 静的ファイルの提供 (フロントエンドファイルが保存されているディレクトリ)
+// 静的ファイルを提供する設定
 app.use(express.static('public'));
 
-// WebSocketの接続処理
-io.on('connection', (socket) => {
-  console.log('新しいユーザが接続しました');
-
-  // メッセージを受信したときの処理
-  socket.on('message', (msg) => {
-    console.log('メッセージ: ' + msg);
-    io.emit('message', msg); // 全ユーザにメッセージを送信
-  });
-
-  // ユーザが切断したときの処理
-  socket.on('disconnect', () => {
-    console.log('ユーザが切断しました');
-  });
+// ルートURLで index.html を提供
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/public/index.html');
 });
 
-// クラウド環境で動作するように、ポートを process.env.PORT から取得
+// WebSocket の接続処理
+io.on('connection', (socket) => {
+    console.log('A user connected');
+
+    // メッセージの受信
+    socket.on('message', (msg) => {
+        console.log('Message received: ' + msg);
+        io.emit('message', msg); // すべてのクライアントに送信
+    });
+
+    // ユーザーが切断したときの処理
+    socket.on('disconnect', () => {
+        console.log('A user disconnected');
+    });
+});
+
+// サーバーを指定ポートで起動
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`サーバーがポート ${PORT} で動作中`);
+    console.log(`Server is running on port ${PORT}`);
 });
