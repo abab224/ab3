@@ -1,39 +1,18 @@
-// 必要なモジュールをインポート
 const express = require('express');
-const http = require('http');
-const socketIO = require('socket.io');
+const path = require('path');
 
-// アプリケーションとサーバーの設定
 const app = express();
-const server = http.createServer(app);
-const io = socketIO(server);
+const PORT = process.env.PORT || 3000;
 
 // 静的ファイルを提供する設定
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
-// ルートURLで index.html を提供
+// ルートリクエストを `index.html` にリダイレクト
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/public/index.html');
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// WebSocket の接続処理
-io.on('connection', (socket) => {
-    console.log('A user connected');
-
-    // メッセージの受信
-    socket.on('message', (msg) => {
-        console.log('Message received: ' + msg);
-        io.emit('message', msg); // すべてのクライアントに送信
-    });
-
-    // ユーザーが切断したときの処理
-    socket.on('disconnect', () => {
-        console.log('A user disconnected');
-    });
-});
-
-// サーバーを指定ポートで起動
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+// サーバー起動
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
